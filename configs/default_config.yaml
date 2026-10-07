@@ -1,0 +1,23 @@
+# CyberSentry Configuration
+project:
+  name: "CyberSentry"
+  version: "0.1.0"
+  description: "AI-Powered Cybersecurity Investigation Pipeline"
+
+data:
+  raw_dir: "data/raw/cic_ids2017"
+  processed_dir: "data/processed"
+  random_seed: 42
+  test_size: 0.2
+  val_size: 0.1
+
+models:
+  save_dir: "models"
+  supervised_candidates:
+    - "logistic_regression"
+    - "random_forest"
+    - "xgboost"
+  anomaly_detector: "isolation_forest"
+
+logging:
+  level: "INFO"

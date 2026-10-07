@@ -3,6 +3,35 @@
 Data audit, leakage-safe split, baselines + XGBoost, Isolation Forest, detection API.
 The agent layer (LangGraph, tools, RAG) is the next step and builds on `POST /detect`.
 
+## Two codebases in one repo
+
+This repo merges two pieces of work on the same project. Both use CIC-IDS2017, but they produce different splits,
+so do not mix their numbers in one table.
+
+| | `src/ml`, `src/api`, `tools/` (this README) | `src/cybersentry` (scaffold, see `AGENTS.md`, `docs/`) |
+| --- | --- | --- |
+| Raw data | `data/raw/*.csv` (6 files used, see `DATA.md`) | `data/raw/cic_ids2017/MachineLearningCVE/*.csv` (all 8) |
+| Classes | 6 grouped classes | 15 original labels |
+| Split | Blocked by 1,000 capture-order rows | Stratified row split (`preprocess`), split by capture day (`temporal_split`) |
+| Output | `data/processed/*.csv.gz` (versioned), `models/`, `reports/` | `data/processed/{train,validation,test,temporal}/*.parquet`, `ml/results/` (not versioned) |
+| Status | Training, anomaly detection and API implemented | Audit and preprocessing scripts; agents, backend, frontend are empty placeholders |
+
+Project overview, architecture and roadmap: `docs/overview.md`, `docs/architecture.md`, `docs/development-roadmap.md`.
+Engineering rules for contributors and coding agents: `AGENTS.md`, `docs/development_rules.md`.
+The numbers in `docs/dataset-audit.md` and `docs/preprocessing.md` come from the scaffold's run on all 8 files
+and are rewritten when its scripts run.
+
+Scaffold scripts (need all 8 raw files):
+
+```bash
+PYTHONPATH=src python -m cybersentry.data.audit            # -> docs/dataset-audit.md, ml/results/
+PYTHONPATH=src python -m cybersentry.data.preprocess       # -> data/processed/{train,validation,test}/, docs/preprocessing.md
+PYTHONPATH=src python -m cybersentry.data.temporal_split   # -> data/processed/temporal/
+```
+
+Tests: `pip install -r requirements-dev.txt && python -m pytest`. `tests/test_audit.py`, `test_preprocessing.py`
+and `test_temporal_split.py` check those script outputs, so they are skipped until the scripts above have been run.
+
 ## Setup (MacBook, Apple silicon)
 
 ```bash

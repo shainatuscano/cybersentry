@@ -1,8 +1,68 @@
-venv/
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+*.so
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Secrets
+.env
+.env.local
+*.env
+secrets.json
+
+# Editors and OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+__MACOSX/
+
+# Notebooks, tests, logs
+.ipynb_checkpoints/
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+logs/
+*.log
+
+# Raw data stays local (src/ml reads data/raw/, src/cybersentry reads data/raw/cic_ids2017/MachineLearningCVE/)
 data/raw/*
 !data/raw/.gitkeep
-data/processed/*.pkl
-data/processed/*.parquet
-models/*.joblib
+!data/raw/cic_ids2017/
+data/raw/cic_ids2017/*
+!data/raw/cic_ids2017/.gitkeep
+
+# Processed data: only the cleaned split described in DATA.md is versioned.
+# Parquet outputs of src/cybersentry (train/, validation/, test/, temporal/) stay local.
+data/processed/*
+!data/processed/.gitkeep
+!data/processed/train.csv.gz.part-*
+!data/processed/val.csv.gz
+!data/processed/test.csv.gz
+data/samples/*
+!data/samples/.gitkeep
+
+# Models: weights stay local, models/meta.json is versioned
+models/*
+!models/.gitkeep
+!models/meta.json
+ml/models/*
+!ml/models/.gitkeep
+*.joblib
+*.pkl
+*.onnx
+
+# Generated outputs of src/cybersentry
+ml/results/*
+!ml/results/.gitkeep
