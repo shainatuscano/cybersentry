@@ -2,12 +2,17 @@
 
 Run:  uvicorn src.api.main:app --reload
 Docs: http://127.0.0.1:8000/docs
+
+/api/v1/... is the Stage 3 API (src/api/v1.py, models in ml/models/stage3/).
+/health, /detect and /detect/batch are the earlier endpoints (models in models/).
 """
 from fastapi import Body, FastAPI, HTTPException
 
 from .service import get_detector
+from .v1 import router as v1_router
 
-app = FastAPI(title="CyberSentry Detection API", version="0.1.0")
+app = FastAPI(title="CyberSentry Detection API", version="0.2.0")
+app.include_router(v1_router)
 
 
 @app.get("/health")

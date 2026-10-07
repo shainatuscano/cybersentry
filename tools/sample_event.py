@@ -4,6 +4,7 @@ Usage:
     python -m tools.sample_event --label DoS            # print one DoS flow as JSON
     python -m tools.sample_event --label BruteForce --post
     python -m tools.sample_event --list                 # show which labels are available
+    python -m tools.sample_event --label DoS --v1 --post   # Stage 3 API: detection + Detection Agent decision
 """
 from __future__ import annotations
 
@@ -18,7 +19,8 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--label", default=None, help="class to sample (default: a random attack)")
     ap.add_argument("--post", action="store_true", help="send the flow to the running API")
-    ap.add_argument("--url", default="http://127.0.0.1:8000/detect")
+    ap.add_argument("--url", default=None, help="default: /detect, or /api/v1/detection/analyze with --v1")
+    ap.add_argument("--v1", action="store_true", help="use the Stage 3 API request format and endpoint")
     ap.add_argument("--seed", type=int, default=None)
     ap.add_argument("--list", action="store_true")
     args = ap.parse_args()
@@ -34,8 +36,11 @@ def main() -> None:
     row = pool.sample(1, random_state=args.seed).iloc[0]
     flow = {f: float(row[f]) for f in meta["features"]}
     print(f"True label: {row['label']}  (source file: {row['src_file']}, row {int(row['row_in_file'])})")
+    if args.v1:
+        flow = {"event_id": f"test-{row['src_file'].split('_')[0]}-{int(row['row_in_file'])}", "features": flow}
+    url = args.url or ("http://127.0.0.1:8000/api/v1/detection/analyze" if args.v1 else "http://127.0.0.1:8000/detect")
     if args.post:
-        req = urllib.request.Request(args.url, data=json.dumps(flow).encode(),
+        req = urllib.request.Request(url, data=json.dumps(flow).encode(),
                                      headers={"Content-Type": "application/json"})
         with urllib.request.urlopen(req) as resp:
             print(json.dumps(json.loads(resp.read()), indent=2))

@@ -32,6 +32,22 @@ PYTHONPATH=src python -m cybersentry.data.temporal_split   # -> data/processed/t
 Tests: `pip install -r requirements-dev.txt && python -m pytest`. `tests/test_audit.py`, `test_preprocessing.py`
 and `test_temporal_split.py` check those script outputs, so they are skipped until the scripts above have been run.
 
+## Stage 3: ML baselines, detection API, Detection Agent
+
+Results: `docs/stage3-ml-results.md`. Design: `docs/detection-architecture.md`.
+
+```bash
+python -m src.ml.stage3.train_eval     # LR / RF / XGBoost, same rows and weights; selection on validation; test evaluation
+python -m src.ml.stage3.anomaly        # Isolation Forest on benign training flows; threshold from benign validation
+python -m src.ml.stage3.temporal       # capture-day generalisation check (Mon-Wed -> Thu -> Fri)
+uvicorn src.api.main:app               # API docs at http://127.0.0.1:8000/docs
+python -m tools.sample_event --label DoS --v1 --post   # one real test flow -> detection + agent decision
+```
+
+Models go to `ml/models/stage3/`, results to `ml/results/stage3/` (both generated, not in git). Endpoints:
+`GET /api/v1/health`, `GET /api/v1/detection/features`, `POST /api/v1/detection/predict`,
+`POST /api/v1/detection/analyze`.
+
 ## Setup (MacBook, Apple silicon)
 
 ```bash

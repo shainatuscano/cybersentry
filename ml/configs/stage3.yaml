@@ -1,0 +1,45 @@
+# Stage 3: supervised baselines, Isolation Forest and the detection service.
+# Every model reads the same rows, the same label space and the same sample weights.
+
+seed: 42
+
+data:
+  # Uses the cleaned blocked split in data/processed/ (see DATA.md): 6 grouped classes.
+  # Rows are capped identically for every model so all three train on exactly the same set.
+  cap_benign: 200000
+  cap_attack: 60000
+  # "balanced" or "none": applied identically to all three models.
+  sample_weight: balanced
+
+models:
+  lr:
+    max_iter: 1000
+    C: 1.0
+  rf:
+    n_estimators: 150
+    max_depth: null
+    min_samples_leaf: 1
+  xgb:
+    n_estimators: 500
+    max_depth: 8
+    learning_rate: 0.1
+    subsample: 0.8
+    colsample_bytree: 0.8
+    early_stopping_rounds: 20   # on the VALIDATION split, never on test
+
+# Fixed before seeing any result: the primary detector is the model with the highest
+# validation macro F1. If two models are within `tie_margin`, the higher validation macro
+# recall wins, then the lower inference cost.
+selection:
+  metric: macro_f1
+  tie_margin: 0.005
+
+anomaly:
+  n_estimators: 200
+  max_benign_train: 200000
+  # Threshold = this quantile of anomaly scores on BENIGN VALIDATION flows,
+  # i.e. a false-positive budget of about 1% on normal traffic.
+  threshold_quantile: 0.99
+
+timing:
+  single_flow_repeats: 200
