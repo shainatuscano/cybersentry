@@ -1,0 +1,62 @@
+{
+  "files": [
+    "Friday-WorkingHours-Morning_pcap_ISCX.csv",
+    "Monday-WorkingHours_pcap_ISCX.csv",
+    "Thursday-WorkingHours-Afternoon-Infilteration_pcap_ISCX.csv",
+    "Thursday-WorkingHours-Morning-WebAttacks_pcap_ISCX.csv",
+    "Tuesday-WorkingHours_pcap_ISCX.csv",
+    "Wednesday-workingHours_pcap_ISCX.csv"
+  ],
+  "rows_raw": 2318531,
+  "n_feature_columns_raw": 77,
+  "raw_label_counts": {
+    "BENIGN": 2047842,
+    "DoS Hulk": 231073,
+    "DoS GoldenEye": 10293,
+    "FTP-Patator": 7938,
+    "SSH-Patator": 5897,
+    "DoS slowloris": 5796,
+    "DoS Slowhttptest": 5499,
+    "Bot": 1966,
+    "Web Attack \u00ef\u00bf\u00bd Brute Force": 1507,
+    "Web Attack \u00ef\u00bf\u00bd XSS": 652,
+    "Infiltration": 36,
+    "Web Attack \u00ef\u00bf\u00bd Sql Injection": 21,
+    "Heartbleed": 11
+  },
+  "rows_with_inf": 2462,
+  "rows_with_nan_or_inf": 2462,
+  "rows_with_invalid_negative_values": 2641,
+  "invalid_negative_rows_by_label": {
+    "Benign": 2466,
+    "DoS": 168,
+    "BruteForce": 6,
+    "Infiltration": 1
+  },
+  "duplicate_rows_removed": 239618,
+  "conflicting_label_rows_removed": 292,
+  "conflicting_label_rows_by_label": {
+    "Benign": 146,
+    "DoS": 146
+  },
+  "rows_after_cleaning": 2073518,
+  "constant_columns_dropped": [
+    "Bwd PSH Flags",
+    "Bwd URG Flags",
+    "Fwd Avg Bytes/Bulk",
+    "Fwd Avg Packets/Bulk",
+    "Fwd Avg Bulk Rate",
+    "Bwd Avg Bytes/Bulk",
+    "Bwd Avg Packets/Bulk",
+    "Bwd Avg Bulk Rate"
+  ],
+  "n_features_final": 69,
+  "class_counts_after_cleaning": {
+    "Benign": 1866820,
+    "DoS": 193428,
+    "BruteForce": 9144,
+    "WebAttack": 2143,
+    "Botnet": 1948,
+    "Infiltration": 35
+  }
+}
